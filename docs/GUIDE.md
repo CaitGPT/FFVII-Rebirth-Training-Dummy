@@ -10,6 +10,12 @@ that your healing lands, and repeat the same fight as often as you like.
 - [UE4SS v3](https://github.com/UE4SS-RE/RE-UE4SS) set up for FF7 Rebirth.
   The data pak works without it, but the course names, the dummy's behaviour
   and the meters all come from the UE4SS half.
+  **On game version 1.005 and other recent builds, UE4SS does not start on its
+  own.** It exits with "AOB scans could not be completed", because one of the
+  files it uses to find its way around the game was written for the January
+  2025 build. Two files beside the game fix it, and they are not specific to
+  this mod — any UE4SS mod needs them on those game versions. See
+  [Troubleshooting](#troubleshooting).
 - A save that has reached Chadley's Combat Simulator (Chapter 2 onwards).
 
 ## Install
@@ -144,6 +150,28 @@ Don't use UE4SS hot reload (Ctrl+R): it crashes this game.
 | Every simulator battle hangs on the white fade | Another mod replaces the same simulator tables. Remove one of them. |
 | The dummy dies, or no meters appear | The UE4SS half isn't running (see the first row). |
 | The game crashed after editing the config | Hot reload (Ctrl+R) crashes the game. Restart it instead. |
+| UE4SS exits with "AOB scans could not be completed" | Your game is a newer build than the files UE4SS ships were written for, so no UE4SS mod runs at all. See below. |
+
+### UE4SS will not start on newer game versions
+
+On game version 1.005 and other builds after January 2025, UE4SS fails at
+start-up and nothing that depends on it runs. Two files beside the game need
+updating, and neither is specific to this mod:
+
+1. `End\Binaries\Win64\ue4ss\UE4SS_Signatures\FText_Constructor.lua` — the
+   pattern it holds matches a piece of the January 2025 game that the newer
+   build compiles differently, so the search finds nothing and UE4SS gives up.
+   **Deleting the file is not a fix**, although it is the advice usually found
+   online: UE4SS then starts but leaves that function unset, and the first mod
+   that puts text on screen fails.
+2. `End\Binaries\Win64\ue4ss\VTableLayout.ini` — the newer build adds one
+   function to a core engine class, so every entry in that file from
+   `Serialize` onwards is one line out of date and UE4SS attaches its hooks to
+   the wrong places. Most then do nothing at all; two crash the game.
+
+We worked both out and will publish the fix separately, with a script that
+checks which build you have and refuses to touch an older one, where these
+changes would break a working setup.
 
 Other mods that replace `Colosseum`, `ColosseumPositionData`,
 `EnemyTerritory`, `EnemyTerritoryLevel` or `EnemyParameter` conflict with this

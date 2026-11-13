@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.1 (2026-11-13)
+
+- **Fix:** giving up a course no longer freezes or crashes the game. The damage panel was being taken off the
+  screen at the moment the battle was tearing itself down. It is now hidden instead, and shown again for the next
+  course. Seen on game version 1.005; earlier versions were affected too, whenever the timing happened to line up.
+- **Fix:** the course titles in the Combat Simulator list are no longer rewritten while the menu is being rebuilt,
+  which could touch widgets the game had already freed.
+- **Works on newer game versions.** Nothing in the mod's own data needed changing for game version 1.005: its
+  tables are identical to the earlier release. UE4SS itself, which this mod needs for its panel, does not start on
+  those versions without a fix to its own files — see the guide.
+
 ## 1.2.0 (2026-11-02)
 
 - **New look:** the meters are now a panel in the top left corner, drawn with the game's own HUD art, with
