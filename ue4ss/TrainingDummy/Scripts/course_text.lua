@@ -64,6 +64,12 @@ function M.remember(menu)
     pending.passes = PASSES
 end
 
+-- Called when a battle starts or ends: the menu's text is not ours to touch while the game is tearing its widgets
+-- down, and nothing of ours is visible then anyway.
+function M.stop()
+    pending.menu, pending.passes = nil, 0
+end
+
 local function replace(block)
     if not valid(block) then return end
     local text = safe(function() return block:GetText():ToString() end)
@@ -110,13 +116,20 @@ end
 function M.apply()
     since_scan = since_scan + 1
     if pending.passes <= 0 then return end
-    pending.passes = pending.passes - 1
-    local menu, replaced = pending.menu, 0
-    if valid(menu) then
-        local info = safe(function() return menu.InfoWindow end)
-        replaced = (replace(safe(function() return info.Txt_CourseTitle end)) or 0)
-            + (replace(safe(function() return menu.Txt_TitleCourse end)) or 0)
+    local menu = pending.menu
+    -- Only work while the menu that asked for it is still alive. Giving up a course tears the simulator's widgets
+    -- down and builds them again, and scanning every text block through that window read freed memory: the game hung
+    -- once and crashed once on 1.005 (2026-11-13, EXCEPTION_ACCESS_VIOLATION reading -1 from SetText). pcall cannot
+    -- catch that, because the fault is inside the engine rather than a Lua error.
+    if not valid(menu) then
+        pending.menu, pending.passes = nil, 0
+        return
     end
+    pending.passes = pending.passes - 1
+    local replaced = 0
+    local info = safe(function() return menu.InfoWindow end)
+    replaced = (replace(safe(function() return info.Txt_CourseTitle end)) or 0)
+        + (replace(safe(function() return menu.Txt_TitleCourse end)) or 0)
     if since_scan >= SCAN_GAP then
         since_scan = 0
         replaced = replaced + scan()

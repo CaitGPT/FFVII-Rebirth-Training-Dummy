@@ -360,8 +360,6 @@ end
 -- DISARM_SECONDS outside battle (the title screen, a long scene).
 local DISARM_SECONDS = 120
 local function tick()
-    -- Menu text only touches widgets the simulator menu's hooks reported.
-    course_text.apply()
     local pawn = gameplay_pawn()
     trace("pawn", pawn and name_of(pawn) or "none")
     if pawn then
@@ -374,6 +372,8 @@ local function tick()
     local in_battle = safe(function() return battle:IsInBattle() end)
     trace("in_battle", tostring(in_battle))
     if in_battle ~= true then
+        -- Menu text only touches widgets the simulator menu's hooks reported, and only outside battle.
+        course_text.apply()
         if state.active then finish() end
         state.scanned_battle = nil
         if not pawn then
@@ -386,6 +386,9 @@ local function tick()
         return
     end
     state.pawnless_since = nil
+    -- In battle the course-select menu is gone, so its text is never ours to touch. Doing it anyway is what hung and
+    -- then crashed the game when a course was given up on 1.005 (2026-11-13).
+    course_text.stop()
     local dummy
     local list = enemies(battle)
     trace("enemies", tostring(#list))
