@@ -195,10 +195,22 @@ function M.show(view, config, world_object)
         end
         ui = made
         print("[TrainingDummy] overlay created\n")
+    elseif valid(ui.widget) then
+        -- It may have been concealed at the end of the last course; show it again.
+        safe(function() ui.widget:SetVisibility(VISIBLE) end)
     end
     draw(ui, view)
 end
 
+-- Taking the panel out of the viewport while the battle is tearing down crashed the game on build 1.005
+-- (2026-11-13: RemoveFromParent in the same second as "training battle ended", an access violation reading -1).
+-- IsValid still passes on a widget whose slot or viewport has already gone, and the fault is inside the engine, so
+-- pcall cannot catch it. At the end of a battle the panel is only hidden, kept, and shown again next course.
+function M.conceal()
+    if ui and valid(ui.widget) then safe(function() ui.widget:SetVisibility(COLLAPSED) end) end
+end
+
+-- The real removal, for the player's own toggle, which happens in the field rather than during a teardown.
 function M.hide()
     if ui and valid(ui.widget) then safe(function() ui.widget:RemoveFromParent() end) end
     ui = nil

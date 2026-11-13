@@ -249,7 +249,7 @@ end
 local function finish()
     if state.active then log("training battle ended") end
     state.active, state.mode, state.battle_id = false, nil, nil
-    if overlay_ok and overlay then safe(overlay.hide) end
+    if overlay_ok and overlay then safe(overlay.conceal) end
 end
 
 local function track_dummy(battle, dummy, now)
