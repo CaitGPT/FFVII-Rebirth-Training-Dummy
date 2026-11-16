@@ -69,6 +69,10 @@ Tests: `python -m pip install lupa`, then `python tests/run_tests.py`.
 - UE4SS, UnrealReZen, FModel and the OpenFF7R community
 - NSK01's VR Simulator Overhaul, for showing the simulator is data-driven
 
+## Requests
+
+We take requests: changes to this mod, or ideas for new Rebirth mods. Open an issue here, or post on the [Nexus page](https://www.nexusmods.com/finalfantasy7rebirth/mods/2474?tab=posts).
+
 ## Licence
 
 MIT (see `LICENSE`). The ported CityHash64 keeps Google's MIT notice.
