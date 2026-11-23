@@ -1,5 +1,10 @@
 # Training Dummy — FF7 Rebirth Combat Simulator mod
 
+> **Replaced by [Simulator Upgrade](https://github.com/CaitGPT/FFVII-Rebirth-Simulator-Upgrade).** Its Custom Training course has Training Dummy's three
+> courses as behaviours (Passive, Aggressive, Healing), any of 206 opponents and a meters panel. Training Dummy stays
+> available but won't be updated. If both are installed, nothing breaks, but Training Dummy's courses are hidden.
+
+
 Adds three courses to Chadley's Combat Simulator, at the end of the list
 (Combat Training tab), with live meters on screen:
 
